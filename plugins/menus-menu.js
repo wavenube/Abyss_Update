@@ -1,4 +1,4 @@
-import fetch from 'node-fetch';
+/*import fetch from 'node-fetch';
 
 // Para configurar o idioma, na raiz do projeto altere o arquivo config.json
 // Para configurar el idioma, en la raíz del proyecto, modifique el archivo config.json.
@@ -563,3 +563,4 @@ function clockString(ms) {
   const s = isNaN(ms) ? '--' : Math.floor(ms / 1000) % 60;
   return [h, m, s].map((v) => v.toString().padStart(2, 0)).join(':');
       }
+*/

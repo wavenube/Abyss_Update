@@ -590,7 +590,7 @@ const fkontak = { key: { participants:"0@s.whatsapp.net", "remoteJid": "status@b
   }
 };
 
-handler.command = /^(prueba)$/i;
+handler.command = /^(allmenu)$/i;
 handler.exp = 50;
 handler.fail = null;
 

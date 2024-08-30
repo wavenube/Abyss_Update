@@ -1,4 +1,4 @@
-import { generateWAMessageFromContent, proto } from '@whiskeysockets/baileys';
+import { generateWAMessageFromContent, prepareWAMessageMedia } from '@whiskeysockets/baileys';
 
 const handler = async (m, { conn, usedPrefix }) => {
     // Mensaje de advertencia para no hacer spam
@@ -37,21 +37,55 @@ const handler = async (m, { conn, usedPrefix }) => {
 
 // Función para enviar el mensaje interactivo con botones
 async function sendInteractiveMessage(m, conn, bienvenida, usedPrefix) {
-    const templateMessage = {
-        text: bienvenida,
-        footer: 'Selecciona una opción',
-        templateButtons: [
-            { index: 1, quickReplyButton: { displayText: 'MENU COMPLETO', id: `${usedPrefix}allmenu` } },
-            { index: 2, quickReplyButton: { displayText: 'PRUEBA DE VELOCIDAD', id: `${usedPrefix}ping` } },
-            { index: 3, quickReplyButton: { displayText: 'AUTO VERIFICAR', id: `${usedPrefix}autoverificar` } },
-        ]
-    };
+    // Prepara un mensaje multimedia opcional (puede ser una imagen, video, etc.)
+    const mediaMessage = await prepareWAMessageMedia({ image: { url: 'https://example.com/welcome-image.jpg' } }, { upload: conn.waUploadToServer });
 
-    // Enviar el mensaje con botones
-    await conn.sendMessage(m.chat, templateMessage, { quoted: m });
+    const msg = generateWAMessageFromContent(m.chat, {
+        viewOnceMessage: {
+            message: {
+                interactiveMessage: {
+                    body: { text: bienvenida },
+                    footer: { text: `${global.wm}`.trim() },
+                    header: {
+                        hasMediaAttachment: true,
+                        imageMessage: mediaMessage.imageMessage,
+                    },
+                    nativeFlowMessage: {
+                        buttons: [
+                            {
+                                name: 'quick_reply',
+                                buttonParamsJson: JSON.stringify({
+                                    display_text: 'MENU COMPLETO',
+                                    id: `${usedPrefix}allmenu`
+                                })
+                            },
+                            {
+                                name: 'quick_reply',
+                                buttonParamsJson: JSON.stringify({
+                                    display_text: 'PRUEBA DE VELOCIDAD',
+                                    id: `${usedPrefix}ping`
+                                })
+                            },
+                            {
+                                name: 'quick_reply',
+                                buttonParamsJson: JSON.stringify({
+                                    display_text: 'AUTO VERIFICAR',
+                                    id: `${usedPrefix}autoverificar`
+                                })
+                            },
+                        ],
+                        messageParamsJson: "",
+                    },
+                },
+            },
+        }
+    }, { userJid: conn.user.jid, quoted: m });
+
+    // Enviar el mensaje
+    await conn.relayMessage(m.chat, msg.message, { messageId: msg.key.id });
 }
 
 // Configuración del comando
-handler.command = /^(menu)$/i; // Este comando se activará con "menu"
+handler.command = /^(menu)$/i;
 
 export default handler;

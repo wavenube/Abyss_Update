@@ -64,12 +64,48 @@ ${readMore}
 
     const pp = global.imagen1;  // Imagen predeterminada
 
-    if (m.isGroup) {
-      conn.sendMessage(m.chat, { image: pp, caption: str.trim(), mentions: [...str.matchAll(/@([0-9]{5,16}|0)/g)].map((v) => v[1] + '@s.whatsapp.net') }, { quoted: m });
+      if (m.isGroup) {
+      // await conn.sendFile(m.chat, vn, 'menu.mp3', null, m, true, { type: 'audioMessage', ptt: true})
+const fkontak = { key: { participants:"0@s.whatsapp.net", "remoteJid": "status@broadcast", "fromMe": false, "id": "Halo" }, "message": { "contactMessage": { "vcard": `BEGIN:VCARD\nVERSION:3.0\nN:Sy;Bot;;;\nFN:y\nitem1.TEL;waid=${m.sender.split('@')[0]}:${m.sender.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD` }}, "participant": "0@s.whatsapp.net" }
+     conn.sendMessage(m.chat, { image: pp, caption: str.trim(), mentions: [...str.matchAll(/@([0-9]{5,16}|0)/g)].map((v) => v[1] + '@s.whatsapp.net'),
+     contextInfo: {
+      isForwarded: true,    forwardedNewsletterMessageInfo: {
+      newsletterJid: "120363318622514917@newsletter",
+      serverMessageId: 1,
+      newsletterName: "<Abyss - Bot>",
+    }, 
+      externalAdReply: {
+        mediaUrl: "https://whatsapp.com/channel/0029VakDx9I0gcfFXnzZIX2v",
+        mediaType: 'VIDEO',
+        description: 'canal del grupo',
+        title: wm,
+        body: "By: ZephyrByte",
+        thumbnailUrl: "https://i.ibb.co/Qjf1sdk/abyss-profile.png",
+        sourceUrl: "https://whatsapp.com/channel/0029VakDx9I0gcfFXnzZIX2v"
+      }
+    } }, { quoted: fkontak });
     } else {
-      const fkontak = { key: { participants: "0@s.whatsapp.net", "remoteJid": "status@broadcast", "fromMe": false, "id": "Halo" }, "message": { "contactMessage": { "vcard": `BEGIN:VCARD\nVERSION:3.0\nN:Sy;Bot;;;\nFN:y\nitem1.TEL;waid=${m.sender.split('@')[0]}:${m.sender.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD` } }, "participant": "0@s.whatsapp.net" };
-      conn.sendMessage(m.chat, { image: pp, caption: str.trim(), mentions: [...str.matchAll(/@([0-9]{5,16}|0)/g)].map((v) => v[1] + '@s.whatsapp.net') }, { quoted: fkontak });
+      //await conn.sendFile(m.chat, vn, 'menu.mp3', null, m, true, { type: 'audioMessage', ptt: true})
+const fkontak = { key: { participants:"0@s.whatsapp.net", "remoteJid": "status@broadcast", "fromMe": false, "id": "Halo" }, "message": { "contactMessage": { "vcard": `BEGIN:VCARD\nVERSION:3.0\nN:Sy;Bot;;;\nFN:y\nitem1.TEL;waid=${m.sender.split('@')[0]}:${m.sender.split('@')[0]}\nitem1.X-ABLabel:Ponsel\nEND:VCARD` }}, "participant": "0@s.whatsapp.net" }
+   conn.sendMessage(m.chat, { image: pp, caption: str.trim(), mentions: [...str.matchAll(/@([0-9]{5,16}|0)/g)].map((v) => v[1] + '@s.whatsapp.net'),
+   contextInfo: {
+      isForwarded: true,    forwardedNewsletterMessageInfo: {
+      newsletterJid: "120363318622514917@newsletter",
+      serverMessageId: 1,
+      newsletterName: "Abyss Bot",
+    }, 
+      externalAdReply: {
+        mediaUrl: "https://whatsapp.com/channel/0029VakDx9I0gcfFXnzZIX2v",
+        mediaType: 'VIDEO',
+        description: 'canal del grupo',
+        title: wm,
+        body: "By: ZephyrByte",
+        thumbnailUrl: "https://i.ibb.co/Qjf1sdk/abyss-profile.png",
+        sourceUrl: "https://whatsapp.com/channel/0029VakDx9I0gcfFXnzZIX2v"
+      }
+    } }, { quoted: fkontak });
     }
+    
   } catch (e) {
     conn.reply(m.chat, "Hubo un error al procesar tu solicitud. Por favor, intenta de nuevo.", m);
   }

@@ -36,7 +36,7 @@ const handler = async (m, { conn, usedPrefix, usedPrefix: _p, __dirname, text, i
 🛡️ *Rango:* ${role}
 📊 *Límite:* ${limit}
 💰 *Dinero:* ${money}
-👥 *Juegos completados:* ${joincount}
+👥 *Usuarios:* ${joincount}
 ⭐ *Premium:* ${user.premiumTime > 0 ? '✅' : (isPrems ? '✅' : '❌')}
 
 ${readMore}

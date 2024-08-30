@@ -109,7 +109,7 @@ const fkontak = { key: { participants:"0@s.whatsapp.net", "remoteJid": "status@b
   }
 };
 
-handler.command = /^(animemn)$/i;
+handler.command = /^(rpg)$/i;
 handler.exp = 50;
 handler.fail = null;
 

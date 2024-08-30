@@ -1,50 +1,75 @@
 import fetch from 'node-fetch';
-import translate from '@vitalets/google-translate-api';
 
-const handler = async (m, {conn, usedPrefix, command, text}) => {
-  const datas = global
-  const idioma = datas.db.data.users[m.sender].language
-  const _translate = JSON.parse(fs.readFileSync(`./src/languages/${idioma}.json`))
-  const tradutor = _translate.plugins.game_akinator
+let sessions = {};  // Para almacenar las sesiones activas de Akinator
 
-  if (m.isGroup) return;
-  const aki = global.db.data.users[m.sender].akinator;
-  if (text == 'end') {
-    if (!aki.sesi) return m.reply(tradutor.texto1);
-    aki.sesi = false;
-    aki.soal = null;
-    m.reply(tradutor.texto2);
-  } else {
-    if (aki.sesi) return conn.reply(m.chat, tradutor.texto3, aki.soal);
-    try {
-      const res = await fetch(`https://api.lolhuman.xyz/api/akinator/start?apikey=${lolkeysapi}`);
-      const anu = await res.json();
-      if (anu.status !== 200) throw tradutor.texto4;
-      const {server, frontaddr, session, signature, question, progression, step} = anu.result;
-      aki.sesi = true;
-      aki.server = server;
-      aki.frontaddr = frontaddr;
-      aki.session = session;
-      aki.signature = signature;
-      aki.question = question;
-      aki.progression = progression;
-      aki.step = step;
-      const resultes2 = await translate(question, {to: 'es', autoCorrect: false});
-      let txt = `${tradutor.texto5[0]} @${m.sender.split('@')[0]}*\n${tradutor.texto5[1]} ${resultes2.text}*\n\n`;
-      txt += tradutor.texto5[2] 
-      txt += tradutor.texto5[3] 
-      txt += tradutor.texto5[4]
-      txt += tradutor.texto5[5] 
-      txt += tradutor.texto5[6] 
-      txt += `${tradutor.texto5[7]}  ${usedPrefix + command} ${tradutor.texto5[8]}`;
-      const soal = await conn.sendMessage(m.chat, {text: txt, mentions: [m.sender]}, {quoted: m});
-      aki.soal = soal;
-    } catch {
-      m.reply(tradutor.texto6);
+const handler = async (m, { conn, usedPrefix }) => {
+    const chatId = m.chat;
+    
+    if (!sessions[chatId]) {
+        // Si no hay una sesión activa, inicia una nueva
+        let response = await fetch(`https://api.akinator.com/session/start`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "language": "es", // Cambiar a "en" para inglés u otros idiomas disponibles
+                "mode": "character"
+            })
+        });
+
+        let sessionData = await response.json();
+        sessions[chatId] = sessionData;
+
+        await conn.sendMessage(m.chat, { text: `🤖 *Akinator* ha iniciado.\n\n${sessionData.question}\n\n*Responde:* Sí, No, Probablemente, No sé, o No realmente.` }, { quoted: m });
+    } else {
+        // Si hay una sesión activa, enviar la respuesta del usuario y continuar
+        let userResponse = m.text.toLowerCase();
+
+        // Mapeo de respuestas del usuario a los valores que la API entiende
+        let answersMap = {
+            "sí": 0,
+            "no": 1,
+            "no sé": 2,
+            "probablemente": 3,
+            "no realmente": 4
+        };
+
+        let answer = answersMap[userResponse];
+        if (answer === undefined) {
+            await conn.sendMessage(m.chat, { text: 'Responde con: Sí, No, Probablemente, No sé, o No realmente.' }, { quoted: m });
+            return;
+        }
+
+        let session = sessions[chatId];
+
+        let response = await fetch(`https://api.akinator.com/session/${session.session}/step`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "step": session.step,
+                "answer": answer
+            })
+        });
+
+        let sessionData = await response.json();
+
+        // Actualizar la sesión con la nueva información
+        session.step = sessionData.nextStep;
+        session.question = sessionData.question;
+
+        if (sessionData.isGuessAvailable) {
+            // Akinator adivinó el personaje
+            await conn.sendMessage(m.chat, { text: `🤖 *Akinator* ha adivinado: ${sessionData.guess}\n\n¿Adiviné correctamente? Responde con Sí o No.` }, { quoted: m });
+            delete sessions[chatId];  // Finaliza la sesión
+        } else {
+            // Akinator hace otra pregunta
+            await conn.sendMessage(m.chat, { text: `🤖 *Akinator*: ${sessionData.question}\n\n*Responde:* Sí, No, Probablemente, No sé, o No realmente.` }, { quoted: m });
+        }
     }
-  }
 };
-handler.menu = ['akinator'];
-handler.tags = ['game'];
-handler.command = /^(akinator)$/i;
+
+handler.command = /^(akinator|aki)$/i;  // El comando se activa con "akinator" o "aki"
 export default handler;

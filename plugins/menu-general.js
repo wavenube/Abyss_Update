@@ -120,7 +120,7 @@ ${readMore}
 🔸 ${usedPrefix}pregunta <txt>
 🔸 ${usedPrefix}suitpvp <@tag>
 🔸 ${usedPrefix}slot <apuesta>
-🔸 ${usedPrefix}ttt ${tradutor.texto1[32]}
+🔸 ${usedPrefix}ttt 
 🔸 ${usedPrefix}delttt
 🔸 ${usedPrefix}acertijo
 🔸 ${usedPrefix}simi <txt>

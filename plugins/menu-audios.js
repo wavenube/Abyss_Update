@@ -245,7 +245,7 @@ const fkontak = { key: { participants:"0@s.whatsapp.net", "remoteJid": "status@b
   }
 };
 
-handler.command = /^(allmenu)$/i;
+handler.command = /^(audios)$/i;
 handler.exp = 50;
 handler.fail = null;
 

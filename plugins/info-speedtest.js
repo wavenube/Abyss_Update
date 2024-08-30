@@ -1,28 +1,41 @@
-import cp from 'child_process';
-import { promisify } from 'util';
-const exec = promisify(cp.exec).bind(cp);
+import { performance } from 'perf_hooks';
+import fetch from 'node-fetch';
 
-const handler = async (m) => {
-    let o;
+const handler = async (m, { conn, usedPrefix }) => {
+    // Mensaje inicial para indicar que la prueba ha comenzado
+    await conn.sendMessage(m.chat, { text: '🕒 Realizando prueba de velocidad, por favor espera...' }, { quoted: m });
+
+    // Registrar el tiempo de inicio
+    const start = performance.now();
+
+    // Realizar una petición simple para medir la latencia del servidor
+    let pingTime = 0;
     try {
-        o = await exec('python3 ookla-speedtest.py --secure --share');
-        const {stdout, stderr} = o;
-        if (stdout.trim()) {
-            const match = stdout.match(/http[^"]+\.png/);
-            const urlImagen = match ? match[0] : null;
-            await conn.sendMessage(m.chat, {image: {url: urlImagen}, caption: stdout.trim()}, {quoted: m});
-        }
-        if (stderr.trim()) { 
-            const match2 = stderr.match(/http[^"]+\.png/);
-            const urlImagen2 = match2 ? match2[0] : null;    
-            await conn.sendMessage(m.chat, {image: {url: urlImagen2}, caption: stderr.trim()}, {quoted: m});
-        }
-    } catch (e) {
-        o = e.message;
-        return m.reply(o)
+        const response = await fetch('https://httpbin.org/get');
+        pingTime = performance.now() - start;
+        await response.text();
+    } catch (error) {
+        pingTime = 'Error en la medición';
     }
+
+    // Registrar el tiempo de respuesta del bot
+    const responseTime = performance.now() - start;
+
+    // Construir el mensaje con los resultados
+    const mensaje = `
+🕒 **Prueba de Velocidad Completada**
+
+◉ **Tiempo de Respuesta del Bot:** ${responseTime.toFixed(2)} ms
+◉ **Latencia del Servidor:** ${typeof pingTime === 'number' ? pingTime.toFixed(2) : pingTime}
+
+⚠️ Ten en cuenta que la latencia puede variar dependiendo de la carga del servidor y la calidad de tu conexión a Internet.
+`;
+
+    // Enviar el mensaje con los resultados
+    await conn.sendMessage(m.chat, { text: mensaje }, { quoted: m });
 };
-handler.help = ['speedtest'];
-handler.tags = ['info'];
-handler.command = /^(speedtest?|test?speed)$/i;
+
+// Configuración del comando
+handler.command = /^(speedtest|pruebavelocidad|ping)$/i;
+
 export default handler;

@@ -1,4 +1,4 @@
-import { generateWAMessageFromContent } from '@whiskeysockets/baileys';
+import { generateWAMessageFromContent, proto } from '@whiskeysockets/baileys';
 
 const handler = async (m, { conn, usedPrefix }) => {
     // Mensaje de advertencia para no hacer spam
@@ -37,49 +37,21 @@ const handler = async (m, { conn, usedPrefix }) => {
 
 // Función para enviar el mensaje interactivo con botones
 async function sendInteractiveMessage(m, conn, bienvenida, usedPrefix) {
-    // Generar el mensaje interactivo con botones
-    const msg = generateWAMessageFromContent(m.chat, {
-        viewOnceMessage: {
-            message: {
-                interactiveMessage: {
-                    body: { text: bienvenida },
-                    footer: { text: 'Selecciona una opción' }, // Pie de página opcional
-                    nativeFlowMessage: {
-                        buttons: [
-                            {
-                                name: 'quick_reply',
-                                buttonParamsJson: JSON.stringify({
-                                    display_text: 'MENU COMPLETO',
-                                    id: `${usedPrefix}allmenu`
-                                })
-                            },
-                            {
-                                name: 'quick_reply',
-                                buttonParamsJson: JSON.stringify({
-                                    display_text: 'PRUEBA DE VELOCIDAD',
-                                    id: `${usedPrefix}ping`
-                                })
-                            },
-                            {
-                                name: 'quick_reply',
-                                buttonParamsJson: JSON.stringify({
-                                    display_text: 'AUTO VERIFICAR',
-                                    id: `${usedPrefix}autoverificar`
-                                })
-                            },
-                        ],
-                        messageParamsJson: "",
-                    },
-                },
-            },
-        }
-    }, { userJid: conn.user.jid, quoted: m });
+    const templateMessage = {
+        text: bienvenida,
+        footer: 'Selecciona una opción',
+        templateButtons: [
+            { index: 1, quickReplyButton: { displayText: 'MENU COMPLETO', id: `${usedPrefix}allmenu` } },
+            { index: 2, quickReplyButton: { displayText: 'PRUEBA DE VELOCIDAD', id: `${usedPrefix}ping` } },
+            { index: 3, quickReplyButton: { displayText: 'AUTO VERIFICAR', id: `${usedPrefix}autoverificar` } },
+        ]
+    };
 
-    // Enviar el mensaje
-    await conn.relayMessage(m.chat, msg.message, { messageId: msg.key.id });
+    // Enviar el mensaje con botones
+    await conn.sendMessage(m.chat, templateMessage, { quoted: m });
 }
 
 // Configuración del comando
-handler.command = /^(menu)$/i; // Este comando se activará con "bienvenida" o "welcome"
+handler.command = /^(menu)$/i; // Este comando se activará con "menu"
 
 export default handler;

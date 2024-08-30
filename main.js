@@ -168,17 +168,17 @@ let numeroTelefono
 if (!!phoneNumber) {
 numeroTelefono = phoneNumber.replace(/[^0-9]/g, '')
 if (!Object.keys(PHONENUMBER_MCC).some(v => numeroTelefono.startsWith(v))) {
-console.log(chalk.bgBlack(chalk.bold.redBright("Comience con el código de país de su número de WhatsApp.\nEjemplo: +5219992095479\n")))
+console.log(chalk.bgBlack(chalk.bold.redBright("Comience con el código de país de su número de WhatsApp.\nEjemplo: +5492613619545\n")))
 process.exit(0)
 }} else {
 while (true) {
-numeroTelefono = await question(chalk.bgBlack(chalk.bold.yellowBright('Por favor, escriba su número de WhatsApp.\nEjemplo: +5219992095479\n')))
+numeroTelefono = await question(chalk.bgBlack(chalk.bold.yellowBright('Por favor, escriba su número de WhatsApp.\nEjemplo: +5492613619545\n')))
 numeroTelefono = numeroTelefono.replace(/[^0-9]/g, '')
 
 if (numeroTelefono.match(/^\d+$/) && Object.keys(PHONENUMBER_MCC).some(v => numeroTelefono.startsWith(v))) {
 break 
 } else {
-console.log(chalk.bgBlack(chalk.bold.redBright("Por favor, escriba su número de WhatsApp.\nEjemplo: +5219992095479.\n")))
+console.log(chalk.bgBlack(chalk.bold.redBright("Por favor, escriba su número de WhatsApp.\nEjemplo: +5492613619545.\n")))
 }}
 rl.close()  
 } 
@@ -206,25 +206,6 @@ if (!opts['test']) {
 }
 
 if (opts['server']) (await import('./server.js')).default(global.conn, PORT);
-
-
-/* Y ese fue el momazo mas bueno del mundo
-        Aunque no dudara tan solo un segundo
-        Mas no me arrepiento de haberme reido
-        Por que la grasa es un sentimiento
-        Y ese fue el momazo mas bueno del mundo
-        Aunque no dudara tan solo un segundo
-        que me arrepiento de ser un grasoso
-        Por que la grasa es un sentimiento
-        - El waza 👻👻👻👻 (Aiden)            
-        
-   Yo tambien se hacer momazos Aiden...
-        ahi te va el ajuste de los borrados
-        inteligentes de las sesiones y de los sub-bot
-        By (Rey Endymion 👺👍🏼) 
-        
-   Ninguno es mejor que tilin god
-        - atte: sk1d             */
 
 function clearTmp() {
   const tmp = [join(__dirname, './src/tmp')];
@@ -265,19 +246,19 @@ fs.watch(dirToWatchccc, (eventType, filename) => {
 
 function purgeSession() {
 let prekey = []
-let directorio = readdirSync("./MysticSession")
+let directorio = readdirSync("./AbysSession")
 let filesFolderPreKeys = directorio.filter(file => {
 return file.startsWith('pre-key-') /*|| file.startsWith('session-') || file.startsWith('sender-') || file.startsWith('app-') */
 })
 prekey = [...prekey, ...filesFolderPreKeys]
 filesFolderPreKeys.forEach(files => {
-unlinkSync(`./MysticSession/${files}`)
+unlinkSync(`./AbysSession/${files}`)
 })
 } 
 
 function purgeSessionSB() {
 try {
-let listaDirectorios = readdirSync('./jadibts/');
+let listaDirectorios = readdirSync('./bebots/');
 let SBprekey = []
 listaDirectorios.forEach(directorio => {
 if (statSync(`./jadibts/${directorio}`).isDirectory()) {
@@ -296,7 +277,7 @@ console.log(chalk.bold.red(`[ ℹ️ ] Algo salio mal durante la eliminación, a
 }}
 
 function purgeOldFiles() {
-const directories = ['./MysticSession/', './jadibts/']
+const directories = ['./AbysSession/', './bebots/']
 const oneHourAgo = Date.now() - (60 * 60 * 1000)
 directories.forEach(dir => {
 readdirSync(dir, (err, files) => {
@@ -336,7 +317,7 @@ if (opcion == '1' || methodCodeQR) {
   }
 let reason = new Boom(lastDisconnect?.error)?.output?.statusCode;
 if (reason == 405) {
-await fs.unlinkSync("./MysticSession/" + "creds.json")
+await fs.unlinkSync("./AbysSession/" + "creds.json")
 console.log(chalk.bold.redBright(`[ ⚠ ] Conexión replazada, Por favor espere un momento me voy a reiniciar...\nSi aparecen error vuelve a iniciar con : npm start`)) 
 process.send('reset')}
 if (connection === 'close') {

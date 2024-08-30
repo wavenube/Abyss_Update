@@ -25,7 +25,7 @@ const handler = async (m, { conn, usedPrefix, usedPrefix: _p, __dirname, text, i
     const doc = ['pdf', 'zip', 'vnd.openxmlformats-officedocument.presentationml.presentation', 'vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'vnd.openxmlformats-officedocument.wordprocessingml.document'];
     const document = doc[Math.floor(Math.random() * doc.length)];
 
-    const str = `menu general
+    const str = `🌟 *MENÚ PRINCIPAL* 🌟
 
  ${taguser}
 
@@ -542,7 +542,7 @@ ${readMore}
 🔹 ${usedPrefix}saveimage
 🔹 ${usedPrefix}viewimage
 ◣───── ★ • ─────◢
-> *━━━━━━━━━━━━━*`;
+> *━━━━━━━━━━━━━* `;
 
     const pp = global.imagen1;  // Imagen predeterminada
 

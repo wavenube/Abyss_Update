@@ -46,9 +46,8 @@ ${readMore}
 🔸 ${usedPrefix}menuaudios
 🔸 ${usedPrefix}menuanimes
 🔸 ${usedPrefix}labiblia
-🔸 ${usedPrefix}lang
-🔸 ${usedPrefix}langgroup
 🔸 ${usedPrefix}glx
+🔸 rpg < rpg anime \*NEW\*
 ◣───── ★ • ─────◢
  > *━━━━━━━━━━━━━*
  

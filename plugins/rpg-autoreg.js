@@ -1,5 +1,5 @@
 import { createHash } from 'crypto';
-import { generateWAMessageFromContent } from '@Skidy89/baileys';
+import { generateWAMessageFromContent } from '@whiskeysockets/baileys';
 
 const handler = async function(m, { conn, usedPrefix }) {
     const user = global.db.data.users[m.sender];

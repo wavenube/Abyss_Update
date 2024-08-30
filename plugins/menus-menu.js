@@ -1,4 +1,4 @@
-import { generateWAMessageFromContent } from "baileys";
+import { generateWAMessageFromContent, proto } from "baileys";
 
 const handler = async (m, { conn }) => {
     // Mensaje de bienvenida
@@ -9,15 +9,15 @@ const handler = async (m, { conn }) => {
         {
             title: "Categoría 1",
             rows: [
-                { title: "Comando 1", description: "Descripción del comando 1", rowId: "!comando1" },
-                { title: "Comando 2", description: "Descripción del comando 2", rowId: "!comando2" },
+                { title: "Comando 1", description: "Descripción del comando 1", rowId: `${m.prefix}comando1` },
+                { title: "Comando 2", description: "Descripción del comando 2", rowId: `${m.prefix}comando2` },
             ]
         },
         {
             title: "Categoría 2",
             rows: [
-                { title: "Comando 3", description: "Descripción del comando 3", rowId: "!comando3" },
-                { title: "Comando 4", description: "Descripción del comando 4", rowId: "!comando4" },
+                { title: "Comando 3", description: "Descripción del comando 3", rowId: `${m.prefix}comando3` },
+                { title: "Comando 4", description: "Descripción del comando 4", rowId: `${m.prefix}comando4` },
             ]
         }
     ];
@@ -28,11 +28,18 @@ const handler = async (m, { conn }) => {
         footer: "Selecciona una opción",
         title: "Menú Interactivo",
         buttonText: "Ver opciones",
-        sections
+        sections: sections
     };
 
     // Genera y envía el mensaje
-    const message = generateWAMessageFromContent(m.chat, { listMessage }, { quoted: m });
+    const message = generateWAMessageFromContent(
+        m.chat,
+        proto.Message.fromObject({
+            listMessage: listMessage
+        }),
+        { quoted: m }
+    );
+
     await conn.relayMessage(m.chat, message.message, { messageId: message.key.id });
 };
 

@@ -1,7 +1,9 @@
-import { prepareWAMessageMedia, generateWAMessageFromContent } from "baileys";
-import fs from 'fs';
+import { generateWAMessageFromContent } from "baileys";
 
 const handler = async (m, { conn }) => {
+    // Mensaje de bienvenida
+    const welcomeText = "¡Bienvenido al menú de lista! Selecciona una opción para continuar.";
+
     // Datos de ejemplo para las secciones del menú
     const sections = [
         {
@@ -22,7 +24,7 @@ const handler = async (m, { conn }) => {
 
     // Configuración del mensaje interactivo
     const listMessage = {
-        text: "Menú de Comandos",
+        text: welcomeText, // Texto de bienvenida
         footer: "Selecciona una opción",
         title: "Menú Interactivo",
         buttonText: "Ver opciones",
